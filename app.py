@@ -13,7 +13,7 @@ client = gspread.authorize(creds)
 
 # Open your Google Sheet
 sheet_url = "https://docs.google.com/spreadsheets/d/1_lW_b6duH1jqLbQKtpx9xnKsJHErQkB_89K4ULLEb3s"
-sheet = client.open_by_key("1_lW_b6duH1jqLbQKtpx9xnKsJHErQkB_89K4ULLEb3s").sheet1
+sheet = client.open_by_key("1O3j6Gu-NZS6H2wgk-ypFr4nb0sxn_Uno6aS72nw_3T0").sheet1
 # First sheet/tab
 
 # Streamlit UI
