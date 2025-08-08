@@ -1,7 +1,7 @@
 import streamlit as st 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime,date
+from datetime import datetime, date
 import json
 import os
 
@@ -25,14 +25,17 @@ if st.button("Submit"):
             creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
             client = gspread.authorize(creds)
 
-            # Access Google Sheet
+            # Debug: show accessible spreadsheets
+            spreadsheet_list = client.openall()
+            st.write("✅ Connected to Google Sheets!")
+            st.write("Accessible spreadsheets:")
+            for s in spreadsheet_list:
+                st.write(f"• {s.title}")
+
+            # Open the correct sheet
             sheet = client.open_by_key("1O3j6Gu-NZS6H2wgk-ypFr4nb0sxn_Uno6aS72nw_3T0").worksheet("Sheet1")
 
-            st.write(f"Accessible spreadsheets: {[s.title for s in spreadsheet_list]}")
-
-            sheet = client.open_by_key("1O3j6Gu-NZS6H2wgk-ypFr4nb0sxn_Uno6aS72nw_3T0").worksheet("Sheet1")
-
-            # Format values
+            # Prepare values
             bday = birthday.strftime("%Y-%m-%d")
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             values = [name.strip(), bday, now]
@@ -42,5 +45,5 @@ if st.button("Submit"):
             st.success("🎉 Your birthday has been saved!")
 
         except Exception as e:
-            st.error("Something went wrong. Please try again later.")
+            st.error("❌ Something went wrong. Check permissions or API settings.")
             st.exception(e)
