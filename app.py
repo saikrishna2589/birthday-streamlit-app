@@ -26,8 +26,8 @@ if st.button("Submit"):
             client = gspread.authorize(creds)
 
             # Access Google Sheet
-            # Debug line
-            spreadsheet_list = client.openall()
+            sheet = client.open_by_key("1O3j6Gu-NZS6H2wgk-ypFr4nb0sxn_Uno6aS72nw_3T0").worksheet("Sheet1")
+
             st.write(f"Accessible spreadsheets: {[s.title for s in spreadsheet_list]}")
 
             sheet = client.open_by_key("1O3j6Gu-NZS6H2wgk-ypFr4nb0sxn_Uno6aS72nw_3T0").worksheet("Sheet1")
