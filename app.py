@@ -13,7 +13,8 @@ client = gspread.authorize(creds)
 
 # Open your Google Sheet
 sheet_url = "https://docs.google.com/spreadsheets/d/1_lW_b6duH1jqLbQKtpx9xnKsJHErQkB_89K4ULLEb3s"
-sheet = client.open_by_url(sheet_url).sheet1  # First sheet/tab
+sheet = client.open_by_key("1_lW_b6duH1jqLbQKtpx9xnKsJHErQkB_89K4ULLEb3s").sheet1
+# First sheet/tab
 
 # Streamlit UI
 st.title("🎈 Birthday Board | Wollongong Badminton Fam 🏸")
