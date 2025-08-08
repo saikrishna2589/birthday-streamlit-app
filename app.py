@@ -7,12 +7,11 @@ import os
 
 # Streamlit UI
 st.title("🎈 Birthday Board | Wollongong Badminton Fam 🏸")
-st.write("We’d love to wish you on your special day! Submit your birthday below — year is optional 😊")
+st.write("We’d love to wish you on your special day! Submit your birthday below 😊")
 
 # Input fields
-name = st.text_input("Name")
-birthday = st.date_input("Birthday (Day and Month only)")
-year_optional = st.text_input("Year (optional)")
+name = st.text_input("**Name**")
+birthday = st.date_input("**Birthday**")
 
 # Submission logic
 if st.button("Submit"):
@@ -30,9 +29,9 @@ if st.button("Submit"):
             sheet = client.open_by_key("1O3j6Gu-NZS6H2wgk-ypFr4nb0sxn_Uno6aS72nw_3T0").worksheet("Sheet1")
 
             # Format values
-            bday = birthday.strftime("%d-%m")
+            bday = birthday.strftime("%Y-%m-%d")
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            values = [name.strip(), bday, year_optional.strip(), now]
+            values = [name.strip(), bday, now]
 
             # Append row
             sheet.append_row(values)
