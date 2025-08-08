@@ -1,7 +1,7 @@
 import streamlit as st 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
+from datetime import datetime,date
 import json
 import os
 
@@ -11,7 +11,7 @@ st.write("We’d love to wish you on your special day! Submit your birthday belo
 
 # Input fields
 name = st.text_input("**Name**")
-birthday = st.date_input("**Birthday**")
+birthday = st.date_input("**Birthday**", min_value=date(1900, 1, 1), max_value=date.today())
 
 # Submission logic
 if st.button("Submit"):
