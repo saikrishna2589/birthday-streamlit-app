@@ -35,28 +35,54 @@ if st.button("Submit"):
 
             st.success("🎉 Your birthday has been saved!")
 
-            # ✅ Upcoming birthdays display logic
-            st.subheader("🎉 Birthdays This Week")
+        except Exception as e:
+            st.error("Something went wrong while saving your birthday.")
+            st.exception(e)
 
-            records = sheet.get_all_records()
-            today = datetime.today()
-            upcoming = []
+# 🎉 Always show upcoming birthdays section
+st.subheader("🎉 Birthdays This Week")
 
-            for r in records:
-                try:
-                    bday_dt = datetime.strptime(r['Birthday'], "%Y-%m-%d").replace(year=today.year)
-                    days_until = (bday_dt - today).days
-                    if 0 <= days_until <= 7:
-                        upcoming.append((r['Name'], bday_dt.strftime("%b %d")))
-                except:
-                    pass  # Skip invalid records
+try:
+    # Setup again (required outside the submit button block)
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    creds_dict = json.loads(os.environ["GOOGLE_SHEET_CREDS"])
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    client = gspread.authorize(creds)
 
-            if upcoming:
-                for name, bday in upcoming:
-                    st.markdown(f"**{name}** – {bday}")
-            else:
-                st.write("No birthdays in the next 7 days.")
+    sheet = client.open_by_key("1O3j6Gu-NZS6H2wgk-ypFr4nb0sxn_Uno6aS72nw_3T0").worksheet("Sheet1")
+    records = sheet.get_all_records()
+
+    today = datetime.today()
+    upcoming = []
+
+    for r in records:
+        try:
+            # Parse birthday and ignore the year for comparison
+            bday = datetime.strptime(r['Birthday'], "%Y-%m-%d")
+            bday_this_year = bday.replace(year=today.year)
+
+            # Handle Feb 29 on non-leap years
+            try:
+                bday_this_year = bday.replace(year=today.year)
+            except ValueError:
+                if bday.month == 2 and bday.day == 29:
+                    bday_this_year = datetime(today.year, 2, 28)
+                else:
+                    raise
+
+            days_diff = (bday_this_year - today).days
+            if 0 <= days_diff <= 7:
+                upcoming.append((r['Name'], bday.strftime("%B %d")))
 
         except Exception as e:
-            st.error("Something went wrong. Please try again later.")
-            st.exception(e)
+            st.warning(f"Skipped record with error: {e}")
+
+    if upcoming:
+        for name, bday_str in upcoming:
+            st.markdown(f"**{name}** – {bday_str}")
+    else:
+        st.write("No birthdays in the next 7 days.")
+
+except Exception as e:
+    st.error("Could not load birthday list.")
+    st.exception(e)
