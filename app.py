@@ -11,7 +11,6 @@ st.write("We’d love to wish you on your special day! Submit your birthday belo
 
 name = st.text_input("Name")
 birthday = st.date_input("Birthday (Day and Month only)")
-year_optional = st.text_input("Year (optional)")
 
 if st.button("Submit"):
     if not name.strip():
